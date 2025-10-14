@@ -1,0 +1,9 @@
+# Banchi di dati SQLite generati dall'applicazione
+inventory.db
+*.db
+*.sqlite
+*.sqlite3
+
+# Ambienti virtuali
+.venv/
+venv/
