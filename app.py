@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 from typing import Callable, Dict, Tuple
 
 
@@ -17,23 +16,7 @@ def launch_cli() -> None:
 def launch_tui() -> None:
     """Avvia l'interfaccia navigabile stile foglio di calcolo."""
 
-    try:
-        from inventory_tui import run as tui_run
-    except ModuleNotFoundError as exc:
-        if exc.name in {"curses", "_curses"}:
-            print("\nImpossibile avviare l'interfaccia a tabella: il modulo 'curses' non è disponibile.")
-            if os.name == "nt":
-                print(
-                    "Su Windows installa il pacchetto opzionale 'windows-curses' eseguendo:\n"
-                    "    pip install windows-curses\n"
-                    "e poi riapri l'applicazione."
-                )
-            else:
-                print(
-                    "Installa le librerie di sistema per 'curses' oppure utilizza la versione a menu."
-                )
-            return
-        raise
+    from inventory_tui import run as tui_run
 
     tui_run()
 
