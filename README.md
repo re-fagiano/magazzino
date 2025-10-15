@@ -26,15 +26,19 @@ cercare, filtrare, visualizzare ed esportare i prodotti presenti in inventario.
    python -m pip install windows-curses
    ```
 
-3. Avviare il programma da terminale e scegliere l'interfaccia desiderata:
+3. Avviare il programma (di default verrà caricata direttamente la GUI a
+   finestre):
 
    ```bash
    python app.py
    ```
 
-   Verrà mostrato un piccolo menu iniziale che permette di accedere sia alla
-   versione classica a menu sia alla nuova interfaccia navigabile stile foglio
-   di calcolo.
+   Per selezionare una diversa interfaccia è possibile indicarla esplicitamente
+   tramite opzione:
+
+   ```bash
+   python app.py --interface cli  # oppure tui / gui
+   ```
 
 In alternativa è possibile avviare direttamente una delle interfacce:
 
@@ -52,11 +56,22 @@ python inventory_gui.py
 Al primo avvio verrà creato automaticamente il database `inventory.db` nella
 stessa cartella dello script.
 
+## Interfaccia grafica dedicata
+
+La GUI (`inventory_gui.py`) offre una vista completa con barra degli strumenti,
+menu a tendina nello stile delle applicazioni desktop e menu contestuale sul
+click destro. È possibile utilizzare scorciatoie da tastiera (Ctrl+N per un
+nuovo articolo, Ctrl+E o Invio per modificarlo, F5 per aggiornare la lista,
+Ctrl+F per focalizzare la ricerca, Canc per eliminare, Ctrl+Q per chiudere) e
+duplicare rapidamente un prodotto esistente. I filtri per categoria e posizione
+sono disponibili tramite le combo dedicate e la voce "Visualizza" della barra
+dei menu.
+
 ## Interfaccia a tabella
 
 Il file `inventory_tui.py` fornisce un'interfaccia curses che presenta
-l'inventario in una tabella navigabile con tastiera. Le frecce permettono di
-scorrere le righe, mentre i comandi mostrati nel piè di pagina consentono di
+l'inventario in una tabella navigabile con tastiera e mouse. Le frecce permettono
+di scorrere le righe, mentre i comandi mostrati nel piè di pagina consentono di
 aggiungere, modificare, filtrare ed esportare i dati senza uscire dalla vista
 principale. L'interfaccia ricorda l'esperienza di consultazione tipica dei
 fogli di calcolo pur rimanendo interamente in ambiente terminale.

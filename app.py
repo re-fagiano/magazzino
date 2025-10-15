@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Callable, Dict, Tuple
+import argparse
+from typing import Callable, Dict, Optional, Sequence, Tuple
 
 
 def launch_cli() -> None:
@@ -36,29 +37,26 @@ OPTIONS: Dict[str, Tuple[str, Callable[[], None]]] = {
 }
 
 
-def main() -> None:
-    """Mostra un piccolo menu iniziale e avvia l'interfaccia scelta."""
+def main(argv: Optional[Sequence[str]] = None) -> None:
+    """Avvia l'interfaccia richiesta (GUI predefinita)."""
 
-    while True:
-        print("\n================================")
-        print(" Gestionale di magazzino - Avvio")
-        print("================================")
-        for key, (label, _) in OPTIONS.items():
-            print(f" {key}. {label}")
-        print(" 0. Esci")
+    parser = argparse.ArgumentParser(description="Gestionale di magazzino")
+    parser.add_argument(
+        "--interface",
+        "-i",
+        choices=tuple(INTERFACES.keys()),
+        default="gui",
+        help=(
+            "Interfaccia da avviare: "
+            "'gui' (predefinita), 'cli' per il menu testuale o 'tui' per la tabella curses."
+        ),
+    )
+    args = parser.parse_args(argv)
 
-        choice = input("\nSeleziona un'opzione: ").strip()
-        if choice == "0":
-            print("Chiusura del programma. A presto!")
-            return
-        action = OPTIONS.get(choice)
-        if action is None:
-            print("Opzione non valida. Riprova.")
-            continue
-        label, handler = action
-        print(f"\nAvvio: {label}\n")
-        handler()
-        break
+    label, handler = INTERFACES[args.interface]
+    if args.interface != "gui":
+        print(f"Avvio: {label}\n")
+    handler()
 
 
 if __name__ == "__main__":
