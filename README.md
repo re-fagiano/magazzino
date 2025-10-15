@@ -22,11 +22,24 @@ visualizzare ed esportare i prodotti presenti in inventario.
 2. Avviare l'applicazione:
 
    ```bash
+   # Interfaccia classica a menu testuale
    python inventory_manager.py
+
+   # Interfaccia navigabile stile foglio di calcolo
+   python inventory_tui.py
    ```
 
 Al primo avvio verrà creato automaticamente il database `inventory.db` nella
 stessa cartella dello script.
+
+## Interfaccia a tabella
+
+Il file `inventory_tui.py` fornisce un'interfaccia curses che presenta
+l'inventario in una tabella navigabile con tastiera. Le frecce permettono di
+scorrere le righe, mentre i comandi mostrati nel piè di pagina consentono di
+aggiungere, modificare, filtrare ed esportare i dati senza uscire dalla vista
+principale. L'interfaccia ricorda l'esperienza di consultazione tipica dei
+fogli di calcolo pur rimanendo interamente in ambiente terminale.
 
 ## Funzionalità principali
 
