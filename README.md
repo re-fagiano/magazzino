@@ -9,10 +9,7 @@ cercare, filtrare, visualizzare ed esportare i prodotti presenti in inventario.
 ## Requisiti
 
 - Python 3.8 o superiore
-- Nessuna dipendenza esterna su Linux/macOS.
-- Su Windows installare anche `windows-curses` **solo** se si vuole usare
-  l'interfaccia a tabella basata su curses. La GUI funziona senza moduli
-  aggiuntivi.
+- Nessuna dipendenza esterna su Linux/macOS; su Windows installare anche `windows-curses` per usare la TUI
 
 ## Avvio rapido
 
@@ -23,12 +20,14 @@ cercare, filtrare, visualizzare ed esportare i prodotti presenti in inventario.
    source .venv/bin/activate  # Su Windows usare `.venv\Scripts\activate`
    ```
 
-2. Installare il supporto opzionale per la TUI su Windows (senza di esso il
-   launcher mostrerà un messaggio di errore e tornerà al menu classico):
+2. Installare il supporto opzionale per la TUI su Windows:
 
    ```bash
-   # Necessario solo su Windows per abilitare il modulo curses
-   pip install windows-curses
+   # Interfaccia classica a menu testuale
+   python inventory_manager.py
+
+   # Interfaccia navigabile stile foglio di calcolo
+   python inventory_tui.py
    ```
 
 3. Avviare il programma da terminale e scegliere l'interfaccia desiderata:
@@ -37,46 +36,22 @@ cercare, filtrare, visualizzare ed esportare i prodotti presenti in inventario.
    python app.py
    ```
 
-   Verrà mostrato un menu iniziale che permette di accedere alla versione a
-   menu testuale, alla tabella navigabile stile foglio di calcolo oppure alla
-   nuova interfaccia grafica completa.
+   Verrà mostrato un piccolo menu iniziale che permette di accedere sia alla
+   versione classica a menu sia alla nuova interfaccia navigabile stile foglio
+   di calcolo.
 
-   Su Windows è anche possibile utilizzare il file `menu_launcher.bat` (basta
-   un doppio clic) per aprire direttamente lo stesso menu senza dover lanciare
-   il comando manualmente.
-
-In alternativa è possibile avviare direttamente una delle interfacce:
+In alternativa è possibile avviare direttamente una delle due interfacce:
 
 ```bash
 # Interfaccia classica a menu testuale
 python inventory_manager.py
 
-# Interfaccia navigabile stile foglio di calcolo (richiede curses)
+# Interfaccia navigabile stile foglio di calcolo
 python inventory_tui.py
-
-# Interfaccia grafica completa (Tkinter)
-python inventory_gui.py
 ```
 
 Al primo avvio verrà creato automaticamente il database `inventory.db` nella
 stessa cartella dello script.
-
-## Interfaccia grafica (GUI)
-
-Il file `inventory_gui.py` offre un'esperienza simile a un gestionale desktop,
-con una finestra principale che mostra l'inventario in una griglia ordinabile,
-filtrabile e ricercabile. Una barra strumenti consente di:
-
-- Aggiungere, modificare o eliminare prodotti tramite finestre di dialogo
-  dedicate;
-- Filtrare rapidamente per categoria, posizione o parole chiave;
-- Evidenziare e isolare gli articoli sotto scorta scegliendo la soglia
-  desiderata;
-- Esportare in CSV con un clic e consultare il valore economico sia filtrato
-  sia totale direttamente nella barra di stato.
-
-Tutte le operazioni sono disponibili con il mouse o la tastiera ed è possibile
-doppio cliccare su una riga per modificarla.
 
 ## Interfaccia a tabella
 
