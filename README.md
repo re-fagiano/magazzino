@@ -1,9 +1,10 @@
 # Gestionale di magazzino (CLI Python)
 
-Questo progetto fornisce una semplice applicazione da riga di comando per la
-gestione di un magazzino locale. I dati sono salvati in un database SQLite
-(`inventory.db`) e l'app consente di aggiungere, modificare, cercare, filtrare,
-visualizzare ed esportare i prodotti presenti in inventario.
+Questo progetto fornisce un gestionale di magazzino completo con tre
+interfacce: menu testuale classico, tabella navigabile in stile foglio di
+calcolo e nuova GUI moderna basata su Tkinter. I dati sono salvati in un
+database SQLite (`inventory.db`) e l'app consente di aggiungere, modificare,
+cercare, filtrare, visualizzare ed esportare i prodotti presenti in inventario.
 
 ## Requisiti
 
@@ -103,6 +104,6 @@ La tabella `products` viene creata automaticamente con i seguenti campi:
 
 ## Miglioramenti futuri
 
-Possibili estensioni comprendono una GUI con Tkinter, la gestione dei
-fornitori, l'esportazione in formato Excel o PDF, e la generazione di avvisi
-via email per le scorte basse.
+Possibili estensioni comprendono il supporto multiutente con autenticazione,
+una sezione dedicata ai fornitori e agli ordini, l'esportazione in formato
+Excel/PDF e un sistema di notifiche automatiche per le scorte critiche.
