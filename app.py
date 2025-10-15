@@ -21,9 +21,18 @@ def launch_tui() -> None:
     tui_run()
 
 
+def launch_gui() -> None:
+    """Avvia l'interfaccia grafica moderna basata su Tkinter."""
+
+    from inventory_gui import run as gui_run
+
+    gui_run()
+
+
 OPTIONS: Dict[str, Tuple[str, Callable[[], None]]] = {
     "1": ("Interfaccia a menu testuale", launch_cli),
     "2": ("Interfaccia navigabile tipo foglio di calcolo", launch_tui),
+    "3": ("Interfaccia grafica (Tkinter)", launch_gui),
 }
 
 
