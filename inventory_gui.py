@@ -46,6 +46,11 @@ class InventoryApp(tk.Tk):
         self.title("Gestionale di Magazzino")
         self.minsize(1080, 600)
 
+        # Migliora l'usabilità con un menù completo dell'applicazione e
+        # scorciatoie da tastiera per le operazioni principali.
+        self.option_add("*tearOff", False)
+        self._build_menubar()
+
         self.search_var = tk.StringVar()
         self.category_var = tk.StringVar()
         self.location_var = tk.StringVar()
@@ -58,6 +63,33 @@ class InventoryApp(tk.Tk):
         self.refresh_table()
 
     # -- Layout ---------------------------------------------------------
+    def _build_menubar(self) -> None:
+        menubar = tk.Menu(self)
+        self.config(menu=menubar)
+
+        file_menu = tk.Menu(menubar)
+        file_menu.add_command(label="Nuovo prodotto", command=self.on_add, accelerator="Ctrl+N")
+        file_menu.add_command(label="Modifica selezionato", command=self.on_edit, accelerator="Ctrl+E")
+        file_menu.add_command(label="Duplica prodotto", command=self.on_duplicate)
+        file_menu.add_command(label="Elimina", command=self.on_delete, accelerator="Canc")
+        file_menu.add_separator()
+        file_menu.add_command(label="Esporta in CSV", command=self.on_export)
+        file_menu.add_separator()
+        file_menu.add_command(label="Esci", command=self._on_exit, accelerator="Ctrl+Q")
+        menubar.add_cascade(label="File", menu=file_menu)
+
+        view_menu = tk.Menu(menubar)
+        view_menu.add_command(label="Aggiorna", command=self.refresh_table, accelerator="F5")
+        view_menu.add_command(label="Prodotti sotto scorta...", command=self.on_low_stock)
+        view_menu.add_command(label="Pulisci filtri", command=self._clear_filters)
+        menubar.add_cascade(label="Visualizza", menu=view_menu)
+
+        help_menu = tk.Menu(menubar)
+        help_menu.add_command(label="Scorciatoie", command=self._show_help)
+        help_menu.add_separator()
+        help_menu.add_command(label="Informazioni", command=self._show_about)
+        menubar.add_cascade(label="Aiuto", menu=help_menu)
+
     def _build_layout(self) -> None:
         self.columnconfigure(0, weight=1)
         self.rowconfigure(1, weight=1)
@@ -67,9 +99,9 @@ class InventoryApp(tk.Tk):
         toolbar.columnconfigure(3, weight=1)
 
         ttk.Label(toolbar, text="Cerca").grid(row=0, column=0, sticky="w")
-        search_entry = ttk.Entry(toolbar, textvariable=self.search_var, width=30)
-        search_entry.grid(row=1, column=0, sticky="ew", padx=(0, 6))
-        search_entry.bind("<Return>", lambda _event: self.refresh_table())
+        self.search_entry = ttk.Entry(toolbar, textvariable=self.search_var, width=30)
+        self.search_entry.grid(row=1, column=0, sticky="ew", padx=(0, 6))
+        self.search_entry.bind("<Return>", lambda _event: self.refresh_table())
 
         ttk.Button(toolbar, text="🔍 Cerca", command=self.refresh_table).grid(row=1, column=1, padx=2)
         ttk.Button(toolbar, text="✖ Pulisci", command=self._clear_filters).grid(row=1, column=2, padx=2)
@@ -137,8 +169,26 @@ class InventoryApp(tk.Tk):
             self.tree.column(col, width=widths.get(col, 120), anchor="w")
 
         self.tree.bind("<Double-1>", lambda _event: self.on_edit())
+        self.tree.bind("<Return>", lambda _event: self.on_edit())
+        self.tree.bind("<Button-3>", self._show_context_menu)
+        self.tree.bind("<Button-2>", self._show_context_menu)
 
         self.tree.tag_configure("low_stock", background="#fff0f0")
+
+        self.tree_menu = tk.Menu(self, tearoff=False)
+        self.tree_menu.add_command(label="Apri/Modifica", command=self.on_edit, accelerator="Invio")
+        self.tree_menu.add_command(label="Duplica", command=self.on_duplicate)
+        self.tree_menu.add_separator()
+        self.tree_menu.add_command(label="Nuovo prodotto", command=self.on_add, accelerator="Ctrl+N")
+        self.tree_menu.add_command(label="Elimina", command=self.on_delete, accelerator="Canc")
+
+        self.bind_all("<Control-n>", lambda event: self._dispatch_if_enabled(self.on_add, event))
+        self.bind_all("<Control-e>", lambda event: self._dispatch_if_enabled(self.on_edit, event))
+        self.bind_all("<Delete>", lambda event: self._dispatch_if_enabled(self.on_delete, event))
+        self.bind_all("<Control-f>", lambda event: self._focus_search(event))
+        self.bind_all("<Control-r>", lambda event: self._dispatch_if_enabled(self._clear_filters, event))
+        self.bind_all("<Control-q>", lambda event: self._dispatch_if_enabled(self._on_exit, event))
+        self.bind_all("<F5>", lambda event: self._dispatch_if_enabled(self.refresh_table, event))
 
         self.status_var = tk.StringVar()
         status = ttk.Label(self, textvariable=self.status_var, anchor="w", relief="sunken")
@@ -151,6 +201,51 @@ class InventoryApp(tk.Tk):
         self.location_var.set("")
         self.low_stock_limit = None
         self.refresh_table()
+
+    def _dispatch_if_enabled(self, callback, event: Optional[tk.Event]) -> str:
+        del event  # non usato, ma mantenuto per compatibilità con bind_all
+        callback()
+        return "break"
+
+    def _focus_search(self, _event: Optional[tk.Event]) -> str:
+        self.search_entry.focus_set()
+        self.search_entry.select_range(0, tk.END)
+        return "break"
+
+    def _show_context_menu(self, event: tk.Event) -> str:
+        iid = self.tree.identify_row(event.y)
+        if iid:
+            self.tree.selection_set(iid)
+            self.tree.focus(iid)
+        try:
+            self.tree_menu.tk_popup(event.x_root, event.y_root)
+        finally:
+            self.tree_menu.grab_release()
+        return "break"
+
+    def _on_exit(self) -> None:
+        if messagebox.askokcancel("Esci", "Vuoi chiudere il gestionale?"):
+            self.destroy()
+
+    def _show_help(self) -> None:
+        message = (
+            "Scorciatoie disponibili:\n\n"
+            "Ctrl+N: nuovo prodotto\n"
+            "Ctrl+E o Invio: modifica il prodotto selezionato\n"
+            "Ctrl+F: attiva la ricerca rapida\n"
+            "Ctrl+R: pulisce tutti i filtri\n"
+            "F5: aggiorna l'elenco\n"
+            "Canc: elimina il prodotto selezionato\n"
+            "Ctrl+Q: chiude l'applicazione"
+        )
+        messagebox.showinfo("Guida rapida", message, parent=self)
+
+    def _show_about(self) -> None:
+        messagebox.showinfo(
+            "Informazioni",
+            "Gestionale di magazzino\nVersione Tkinter ottimizzata per l'uso con mouse e menu a tendina.",
+            parent=self,
+        )
 
     def _toggle_sort(self, column: str) -> None:
         if self.sort_column == column:
@@ -293,6 +388,34 @@ class InventoryApp(tk.Tk):
             return
         if not updated:
             messagebox.showwarning("Non trovato", "Il prodotto selezionato non esiste più in archivio.")
+        self.refresh_table()
+
+    def on_duplicate(self) -> None:
+        row = self._get_selected_product()
+        if row is None:
+            return
+
+        dialog = ProductDialog(
+            self,
+            title="Duplica prodotto",
+            initial=ProductData(
+                code=f"{row[1]}-copy",
+                name=row[2],
+                description=row[3],
+                category=row[4],
+                quantity=row[5],
+                price=row[6],
+                location=row[7],
+            ),
+        )
+        product = dialog.show()
+        if product is None:
+            return
+        try:
+            add_product(**product)
+        except Exception as exc:  # noqa: BLE001
+            messagebox.showerror("Errore", str(exc))
+            return
         self.refresh_table()
 
     def on_delete(self) -> None:
