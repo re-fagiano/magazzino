@@ -19,12 +19,14 @@ visualizzare ed esportare i prodotti presenti in inventario.
    source .venv/bin/activate  # Su Windows usare `.venv\Scripts\activate`
    ```
 
-2. Installare il supporto opzionale per la TUI su Windows (senza di esso il
-   launcher mostrerà un messaggio di errore e tornerà al menu classico):
+2. Installare il supporto opzionale per la TUI su Windows:
 
    ```bash
-   # Necessario solo su Windows per abilitare il modulo curses
-   pip install windows-curses
+   # Interfaccia classica a menu testuale
+   python inventory_manager.py
+
+   # Interfaccia navigabile stile foglio di calcolo
+   python inventory_tui.py
    ```
 
 3. Avviare il programma da terminale e scegliere l'interfaccia desiderata:
@@ -36,10 +38,6 @@ visualizzare ed esportare i prodotti presenti in inventario.
    Verrà mostrato un piccolo menu iniziale che permette di accedere sia alla
    versione classica a menu sia alla nuova interfaccia navigabile stile foglio
    di calcolo.
-
-   Su Windows è anche possibile utilizzare il file `menu_launcher.bat` (basta
-   un doppio clic) per aprire direttamente lo stesso menu senza dover lanciare
-   il comando manualmente.
 
 In alternativa è possibile avviare direttamente una delle due interfacce:
 
