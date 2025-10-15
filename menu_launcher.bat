@@ -15,14 +15,21 @@ if %errorlevel% neq 0 (
     exit /b 1
 )
 
-python app.py
+set "PYTHON_GUI=pythonw"
+where pythonw >nul 2>&1
+if %errorlevel% neq 0 set "PYTHON_GUI=python"
+
+%PYTHON_GUI% -m inventory_gui
 set "exit_code=%errorlevel%"
-if not "%exit_code%"=="0" (
-    echo.
-    echo Il programma si e' chiuso con codice %exit_code%.
-    echo Premi un tasto per continuare...
-    pause >nul
-)
+if "%exit_code%"=="0" goto end
+
+echo.
+echo L'interfaccia grafica non si e' avviata correttamente (codice %exit_code%).
+echo Provo ad aprire la versione testuale come ripiego.
+echo.
+python app.py --interface cli
+
+:end
 
 popd
 endlocal
