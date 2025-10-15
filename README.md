@@ -40,11 +40,6 @@ cercare, filtrare, visualizzare ed esportare i prodotti presenti in inventario.
    python app.py --interface cli  # oppure tui / gui
    ```
 
-   Su Windows è inoltre possibile avviare la versione grafica senza finestra
-   console facendo doppio clic su `start_gui.pyw` oppure sul collegamento
-   `menu_launcher.bat`, che proverà prima la GUI e in caso di errore ripiegherà
-   sull'interfaccia testuale.
-
 In alternativa è possibile avviare direttamente una delle interfacce:
 
 ```bash
@@ -54,7 +49,7 @@ python inventory_manager.py
 # Interfaccia navigabile stile foglio di calcolo
 python inventory_tui.py
 
-# Interfaccia grafica moderna basata su Tkinter (menu a tendina, scorciatoie)
+# Interfaccia grafica moderna basata su Tkinter
 python inventory_gui.py
 ```
 
