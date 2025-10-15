@@ -10,6 +10,11 @@ interface while reusing the persistence layer implemented in
 from __future__ import annotations
 
 import curses
+
+BUTTON1_CLICKED = getattr(curses, "BUTTON1_CLICKED", 0)
+BUTTON1_DOUBLE_CLICKED = getattr(curses, "BUTTON1_DOUBLE_CLICKED", 0)
+BUTTON4_PRESSED = getattr(curses, "BUTTON4_PRESSED", 0)
+BUTTON5_PRESSED = getattr(curses, "BUTTON5_PRESSED", 0)
 from dataclasses import dataclass
 from typing import Callable, List, Optional, Sequence
 
@@ -151,8 +156,9 @@ class InventoryTUI:
 
     def _draw_status_bar(self) -> None:
         help_line = (
-            "Freccie: naviga | Invio: dettagli | a: aggiungi | e: modifica | d: elimina | "
-            "f: filtri | /: cerca | o: ordina | O: verso | r: aggiorna | t: valore | x: CSV | q: esci"
+            "Mouse: click seleziona/doppio click dettagli | Frecce: naviga | Invio: dettagli | "
+            "a: aggiungi | e: modifica | d: elimina | f: filtri | /: cerca | o: ordina | O: verso | "
+            "r: aggiorna | t: valore | x: CSV | q: esci"
         )
         y = self.height - 2
         if y >= 0:
@@ -174,11 +180,19 @@ class InventoryTUI:
     def run(self) -> None:
         manager.initialize_database()
         self.refresh_data()
+        try:
+            curses.mousemask(curses.ALL_MOUSE_EVENTS | curses.REPORT_MOUSE_POSITION)
+            curses.mouseinterval(150)
+        except curses.error:  # pragma: no cover - defensive on limited terminals
+            pass
         while True:
             self.draw()
             key = self.stdscr.getch()
             if key == curses.KEY_RESIZE:
                 self._clamp_selection()
+                continue
+            if key == curses.KEY_MOUSE:
+                self._handle_mouse()
                 continue
             if key in (ord("q"), ord("Q")):
                 break
@@ -235,6 +249,36 @@ class InventoryTUI:
             self.set_status(
                 "Naviga con le frecce, usa i comandi in basso per gestire l'inventario."
             )
+
+    def _handle_mouse(self) -> None:
+        try:
+            _id, x, y, _z, state = curses.getmouse()
+        except curses.error:  # pragma: no cover - defensive
+            return
+
+        if state & BUTTON1_CLICKED:
+            self._select_row_at(y)
+        elif state & BUTTON1_DOUBLE_CLICKED:
+            if self._select_row_at(y):
+                self._show_details()
+        elif state & BUTTON4_PRESSED:
+            self._move_selection(-1)
+        elif state & BUTTON5_PRESSED:
+            self._move_selection(1)
+
+    def _select_row_at(self, y: int) -> bool:
+        table_start = 3  # header (1) + separator (1) + first data row offset
+        if y < table_start:
+            return False
+        relative = y - table_start
+        if relative < 0 or relative >= self.table_height:
+            return False
+        index = self.top_row + relative
+        if not self.rows or index >= len(self.rows):
+            return False
+        self.selected_index = index
+        self._clamp_selection()
+        return True
 
     def _move_selection(self, delta: int) -> None:
         if not self.rows:

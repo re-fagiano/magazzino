@@ -23,11 +23,7 @@ cercare, filtrare, visualizzare ed esportare i prodotti presenti in inventario.
 2. Installare il supporto opzionale per la TUI su Windows:
 
    ```bash
-   # Interfaccia classica a menu testuale
-   python inventory_manager.py
-
-   # Interfaccia navigabile stile foglio di calcolo
-   python inventory_tui.py
+   python -m pip install windows-curses
    ```
 
 3. Avviare il programma da terminale e scegliere l'interfaccia desiderata:
@@ -40,7 +36,7 @@ cercare, filtrare, visualizzare ed esportare i prodotti presenti in inventario.
    versione classica a menu sia alla nuova interfaccia navigabile stile foglio
    di calcolo.
 
-In alternativa è possibile avviare direttamente una delle due interfacce:
+In alternativa è possibile avviare direttamente una delle interfacce:
 
 ```bash
 # Interfaccia classica a menu testuale
@@ -48,6 +44,9 @@ python inventory_manager.py
 
 # Interfaccia navigabile stile foglio di calcolo
 python inventory_tui.py
+
+# Interfaccia grafica moderna basata su Tkinter
+python inventory_gui.py
 ```
 
 Al primo avvio verrà creato automaticamente il database `inventory.db` nella
