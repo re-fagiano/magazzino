@@ -49,7 +49,7 @@ python inventory_manager.py
 # Interfaccia navigabile stile foglio di calcolo
 python inventory_tui.py
 
-# Interfaccia grafica moderna basata su Tkinter (menu a tendina, scorciatoie)
+# Interfaccia grafica moderna basata su Tkinter
 python inventory_gui.py
 ```
 

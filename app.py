@@ -30,10 +30,10 @@ def launch_gui() -> None:
     gui_run()
 
 
-INTERFACES: Dict[str, Tuple[str, Callable[[], None]]] = {
-    "cli": ("Interfaccia a menu testuale", launch_cli),
-    "tui": ("Interfaccia navigabile tipo foglio di calcolo", launch_tui),
-    "gui": ("Interfaccia grafica (Tkinter)", launch_gui),
+OPTIONS: Dict[str, Tuple[str, Callable[[], None]]] = {
+    "1": ("Interfaccia a menu testuale", launch_cli),
+    "2": ("Interfaccia navigabile tipo foglio di calcolo", launch_tui),
+    "3": ("Interfaccia grafica (Tkinter)", launch_gui),
 }
 
 
