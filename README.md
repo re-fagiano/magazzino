@@ -22,8 +22,11 @@ visualizzare ed esportare i prodotti presenti in inventario.
 2. Installare il supporto opzionale per la TUI su Windows:
 
    ```bash
-   # Necessario solo su Windows per abilitare il modulo curses
-   pip install windows-curses
+   # Interfaccia classica a menu testuale
+   python inventory_manager.py
+
+   # Interfaccia navigabile stile foglio di calcolo
+   python inventory_tui.py
    ```
 
 3. Avviare il programma da terminale e scegliere l'interfaccia desiderata:
