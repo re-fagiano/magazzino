@@ -8,9 +8,9 @@ visualizzare ed esportare i prodotti presenti in inventario.
 ## Requisiti
 
 - Python 3.8 o superiore
-- Nessuna dipendenza esterna: vengono utilizzate solo librerie standard
+- Nessuna dipendenza esterna su Linux/macOS; su Windows installare anche `windows-curses` per usare la TUI
 
-## Installazione ed esecuzione
+## Avvio rapido
 
 1. (Opzionale) Creare ed attivare un ambiente virtuale:
 
@@ -19,7 +19,7 @@ visualizzare ed esportare i prodotti presenti in inventario.
    source .venv/bin/activate  # Su Windows usare `.venv\Scripts\activate`
    ```
 
-2. Avviare l'applicazione:
+2. Installare il supporto opzionale per la TUI su Windows:
 
    ```bash
    # Interfaccia classica a menu testuale
@@ -28,6 +28,26 @@ visualizzare ed esportare i prodotti presenti in inventario.
    # Interfaccia navigabile stile foglio di calcolo
    python inventory_tui.py
    ```
+
+3. Avviare il programma da terminale e scegliere l'interfaccia desiderata:
+
+   ```bash
+   python app.py
+   ```
+
+   Verrà mostrato un piccolo menu iniziale che permette di accedere sia alla
+   versione classica a menu sia alla nuova interfaccia navigabile stile foglio
+   di calcolo.
+
+In alternativa è possibile avviare direttamente una delle due interfacce:
+
+```bash
+# Interfaccia classica a menu testuale
+python inventory_manager.py
+
+# Interfaccia navigabile stile foglio di calcolo
+python inventory_tui.py
+```
 
 Al primo avvio verrà creato automaticamente il database `inventory.db` nella
 stessa cartella dello script.
